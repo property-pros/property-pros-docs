@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package notepurchaseagreement;
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "property-pros-docs/proto/connection/v1;connectionv1";
+
+message NotePuchaseAgreement {
+  uint32 Id = 1;
+  string FirstName = 2;
+  string LastName = 3;
+  string DateOfBirth = 4;
+  string HomeAddress = 5;
+  string EmailAddress = 6;
+  string PhoneNumber = 7;
+  string SocialSecurity = 8;
+  uint64 FundsCommitted = 9;
+}
+
+message GetNotePurchaseAgreementDocRequest {
+  NotePuchaseAgreement payload = 1;
+}
+
+message GetNotePurchaseAgreementDocResponse {
+  bytes fileContent = 1;
+}
+
+service NotePurchaseAgreementService {
+  rpc GetNotePurchaseAgreementDoc(GetNotePurchaseAgreementDocRequest) returns (GetNotePurchaseAgreementDocResponse) {
+    option (google.api.http) = {
+      // Route to this method from GET requests to /config
+      get: "/notepurchaseagreementdoc"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Get Note Purchase Agreement Document"
+      description: "Gets a note purchase agreement filled out with customer data."
+      tags: "NotePurchaseAgreement"
+    };
+  }
+}

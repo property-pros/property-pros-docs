@@ -1,0 +1,67 @@
+version: "3.3"
+
+services:
+  property-pros-test:
+    image: acim/go-reflex
+    environment:
+      - RACE_DETECTOR=1
+      - BUILD_ARGS=/app
+      - RUN_ARGS=-enable_tls=false
+    volumes:
+      - .:/app
+    ports:
+      - 8020:8020
+    working_dir: /app
+    networks:
+      - back-tier
+    depends_on:
+      - buf
+  buf:
+    image: property-pros/buf-local
+    command: generate
+    entrypoint: /usr/local/bin/buf
+    build: 
+      context: .
+      dockerfile: Dockerfile.buf
+    volumes:
+      - .:/app/
+      - /app/node_modules/
+    networks:
+      - back-tier
+    
+  # admin:
+  #   stdin_open: true
+  #   build:
+  #     context: .
+  #     dockerfile: ./mytown-admin-web/Dockerfile
+  #   command: ../proto_build.sh && npm start
+  #   volumes:
+  #     - ./mytown-admin-web:/app
+  #   ports:
+  #     - "3002:3000"
+  #   networks:
+  #     - back-tier
+  #   depends_on:
+  #     - activities
+  #   environment:
+  #     POSTGRES_PASSWORD: postgres
+  # db:
+  #   environment: 
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: postgres
+  #     POSTGRES_DB: GroupActivities
+  #   image: postgres:11-alpine
+  #   container_name: db
+  #   ports: 
+  #     - 5432:5432
+  #   expose: 
+  #     - "5432"
+  #   volumes:
+  #     - "db-data:/var/lib/postgresql/data"
+  #   networks:
+  #     - back-tier
+volumes:
+  go-modules:
+
+networks:
+  back-tier:

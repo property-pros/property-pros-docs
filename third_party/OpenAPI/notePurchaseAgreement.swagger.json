@@ -1,0 +1,174 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "notePurchaseAgreement.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "NotePurchaseAgreementService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/notepurchaseagreementdoc": {
+      "get": {
+        "summary": "Get Note Purchase Agreement Document",
+        "description": "Gets a note purchase agreement filled out with customer data.",
+        "operationId": "NotePurchaseAgreementService_GetNotePurchaseAgreementDoc",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/notepurchaseagreementGetNotePurchaseAgreementDocResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "payload.Id",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "payload.FirstName",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "payload.LastName",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "payload.DateOfBirth",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "payload.HomeAddress",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "payload.EmailAddress",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "payload.PhoneNumber",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "payload.SocialSecurity",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "payload.FundsCommitted",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "NotePurchaseAgreement"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "notepurchaseagreementGetNotePurchaseAgreementDocResponse": {
+      "type": "object",
+      "properties": {
+        "fileContent": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "notepurchaseagreementNotePuchaseAgreement": {
+      "type": "object",
+      "properties": {
+        "Id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "FirstName": {
+          "type": "string"
+        },
+        "LastName": {
+          "type": "string"
+        },
+        "DateOfBirth": {
+          "type": "string"
+        },
+        "HomeAddress": {
+          "type": "string"
+        },
+        "EmailAddress": {
+          "type": "string"
+        },
+        "PhoneNumber": {
+          "type": "string"
+        },
+        "SocialSecurity": {
+          "type": "string"
+        },
+        "FundsCommitted": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

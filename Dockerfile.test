@@ -1,0 +1,4 @@
+FROM acim/go-reflex
+WORKDIR /app
+
+CMD ["go", "run", "./examples/lumerin"]
