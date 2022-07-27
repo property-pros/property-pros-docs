@@ -1,4 +1,4 @@
-module github.com/vireocloud/property-pros-docs
+module github.com/vireocloud/property-pros-docs.git
 
 go 1.18
 
