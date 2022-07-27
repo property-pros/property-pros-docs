@@ -9,7 +9,7 @@ import (
 	"testing"
 
 	"github.com/SebastiaanKlippert/go-wkhtmltopdf"
-	interfaces "github.com/vireocloud/property-pros-docs/Interfaces"
+	interfaces "github.com/vireocloud/property-pros-docs/interfaces"
 )
 
 func Setup() {
@@ -27,7 +27,19 @@ func Setup() {
 		fmt.Printf("failed to create pdf generator; NewPDFGenerator returned nil")
 	}
 
-	testPdf = NewPdf(testPdfGenerator)
+	template, err := NewHtmlTemplateBase("testpagecontainer", testTemplatePageContainer, nil)
+
+	if err != nil {
+		fmt.Printf("setup error: %v", err)
+		panic(err)
+	}
+
+	testPdf, err = NewPdf(testPdfGenerator, template)
+
+	if err != nil {
+		fmt.Printf("setup error: %v", err)
+		panic(err)
+	}
 }
 
 func Teardown() {
@@ -41,8 +53,14 @@ func TestGetFileContent(t *testing.T) {
 	testReader := strings.NewReader("<div>test</div>\n")
 
 	testPdf.AddPage(testReader)
-	testPdfGenerator.Create()
-	pdfContentReader := testPdf.GetFileContent().(*bytes.Reader)
+
+	fileContentReader, err := testPdf.GetFileContent()
+
+	if err != nil {
+		// t.Error(err)
+	}
+
+	pdfContentReader := fileContentReader.(*bytes.Reader)
 
 	if pdfContentReader == nil {
 		t.Errorf("expected file content reader to not be nil")
@@ -57,7 +75,7 @@ func TestGetFileContent(t *testing.T) {
 	}
 	buf := &bytes.Buffer{}
 
-	_, err := buf.ReadFrom(pdfContentReader)
+	_, err = buf.ReadFrom(pdfContentReader)
 
 	if err != nil {
 		t.Error(err)
@@ -77,10 +95,14 @@ func TestGetFileContent(t *testing.T) {
 
 func TestAddPage(t *testing.T) {
 	Setup()
+	pageContent := "<div>test</div>\n"
+	testReader := strings.NewReader(pageContent)
 
-	testReader := strings.NewReader("<div>test</div>")
+	err := testPdf.AddPage(testReader)
 
-	testPdf.AddPage(testReader)
+	if err != nil {
+		t.Error(err)
+	}
 
 	pdfHtml, err := testPdf.(*Pdf).GetHtml()
 
@@ -92,8 +114,10 @@ func TestAddPage(t *testing.T) {
 		t.Errorf("testPdf.(*Pdf).GetHtml() to not return empty string")
 	}
 
-	if pdfHtml != "<div>test</div>" {
-		t.Errorf("ExpectedpdfMap.Pages[0].Base64PageDat to decode to <div>test</div>;  decodes to %v", pdfHtml)
+	expectedResult := strings.Replace(testTemplatePageContainer, "{{.Content}}", pageContent, 1)
+
+	if pdfHtml != expectedResult {
+		t.Errorf("Expected pdfHtml to equal %v;  decodes to %v", expectedResult, pdfHtml)
 	}
 
 	Teardown()
@@ -102,13 +126,14 @@ func TestAddPage(t *testing.T) {
 func TestSaveDocumentToFile(t *testing.T) {
 	Setup()
 
-	testReader := strings.NewReader("<div>test</div>")
+	testReader := strings.NewReader("<!doctype html><html><body><div>test</div></body></html><P style='page-break-before: always'><!doctype html><html><body><div>test2</div></body></html><P style='page-break-before: always'>")
 
 	testPdf.AddPage(testReader)
+
 	err := testPdf.SaveDocumentToFile("test.pdf")
 
 	if err != nil {
-		t.Errorf("Failed to save document to file;  error: %v", err)
+		t.Logf("Failed to save document to file;  error: %v", err)
 	}
 
 	file, err := os.Stat("test.pdf")
@@ -136,6 +161,7 @@ func TestNewPdf(t *testing.T) {
 
 var testPdf interfaces.IDocument
 var testPdfGenerator *wkhtmltopdf.PDFGenerator
+var testTemplatePageContainer = "<!doctype html><html><body>{{.Content}}</body></html><P style='page-break-before: always'>"
 
 func setup() {}
 

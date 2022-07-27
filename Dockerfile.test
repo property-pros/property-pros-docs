@@ -1,4 +1,7 @@
 FROM acim/go-reflex
-WORKDIR /app
 
-CMD ["go", "run", "./examples/lumerin"]
+RUN wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.bullseye_arm64.deb && \
+    apt update && \
+    apt install -y ./wkhtmltox_0.12.6.1-2.bullseye_arm64.deb
+
+CMD ["/bin/bash", "-c", "/go/bin/reflex -d none -c /usr/local/etc/reflex.conf"]

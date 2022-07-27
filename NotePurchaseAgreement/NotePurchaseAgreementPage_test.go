@@ -1,13 +1,17 @@
-package notepurchaseagreement
+package notePurchaseAgreement
 
 import (
 	"strings"
 	"testing"
 )
 
+var testTemplate = "<div>{{.Test}}</div>"
+
 type templateModel struct {
 	Test string
 }
+
+var testTemplateModel = &templateModel{Test: "test"}
 
 func TestNewNotePurchaseAgreementPage(t *testing.T) {
 	page1, err := NewNotePurchaseAgreementPage(0, testTemplate, testTemplateModel)
@@ -24,25 +28,23 @@ func TestNewNotePurchaseAgreementPage(t *testing.T) {
 		t.Errorf("expected NotePurchaseAgreementPage.index to equal 0;  equals %v", page1.index)
 	}
 
-	if page1.templatePath != "notePurchaseAgreementPage0" {
-		t.Errorf("expected NotePurchaseAgreementPage.templatePath to equal notePurchaseAgreementPage0;  equals %v", page1.templatePath)
+	if page1.Name() != "notePurchaseAgreementPage0" {
+		t.Errorf("expected NotePurchaseAgreementPage.templatePath to equal notePurchaseAgreementPage0;  equals %v", page1.Name())
 	}
 
-	if page1.template == nil {
+	if page1.HtmlTemplateBase == nil {
 		t.Errorf("expected NotePurchaseAgreementPage.template to not equal nil")
 	}
 
-	if page1.template.Name() != "notePurchaseAgreementPage0" {
-		t.Errorf("expected NotePurchaseAgreementPage.template.Name() to return notePurchaseAgreementPage0;  equals %v", page1.template.Name())
+	if page1.Name() != "notePurchaseAgreementPage0" {
+		t.Errorf("expected NotePurchaseAgreementPage.template.Name() to return notePurchaseAgreementPage0;  equals %v", page1.Name())
 	}
 
-	stringBuilder := &strings.Builder{}
-
-	page1.template.Execute(stringBuilder, testTemplateModel)
+	result := page1.ToString()
 
 	expectedTestResult := strings.Replace(testTemplate, "{{.Test}}", testTemplateModel.Test, -1)
 
-	if stringBuilder.String() != expectedTestResult {
-		t.Errorf("expected NotePurchaseAgreementPage.template.Execute() to return %v;  equals %v", expectedTestResult, stringBuilder.String())
+	if result != expectedTestResult {
+		t.Errorf("expected NotePurchaseAgreementPage.template.Execute() to return %v;  equals %v", expectedTestResult, result)
 	}
 }

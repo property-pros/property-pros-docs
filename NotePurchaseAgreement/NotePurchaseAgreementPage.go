@@ -1,11 +1,13 @@
-package notepurchaseagreement
+package notePurchaseAgreement
 
 import (
 	"fmt"
+
+	documents "github.com/vireocloud/property-pros-docs/documents"
 )
 
 type NotePurchaseAgreementPage struct {
-	*HtmlTemplateBase
+	*documents.HtmlTemplateBase
 	index uint
 }
 
@@ -14,7 +16,7 @@ func NewNotePurchaseAgreementPage(index uint, content string, model interface{})
 		index: index,
 	}
 
-	base, err := NewHtmlTemplateBase(fmt.Sprintf("notePurchaseAgreementPage%v", index), content, model)
+	base, err := documents.NewHtmlTemplateBase(fmt.Sprintf("notePurchaseAgreementPage%v", index), content, model)
 
 	if err != nil {
 		return nil, err

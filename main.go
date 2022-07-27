@@ -12,6 +12,7 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"sync"
 
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
@@ -22,13 +23,13 @@ import (
 	"github.com/improbable-eng/grpc-web/go/grpcweb"
 	"github.com/vireocloud/property-pros-docs/server/gateway"
 
-	propertyProsApi "github.com/vireocloud/property-pros-docs/proto"
+	propertyProsApi "github.com/vireocloud/property-pros-docs/generated/notePurchaseAgreement"
 	controllers "github.com/vireocloud/property-pros-docs/server/controllers"
 	"github.com/vireocloud/property-pros-docs/server/third_party"
 )
 
 var (
-	enableTls = flag.Bool("enable_tls", true, "Use TLS - required for HTTP2.")
+	enableTls = flag.Bool("enable_tls", false, "Use TLS - required for HTTP2.")
 )
 
 func main() {
@@ -91,13 +92,14 @@ func main() {
 			log.Fatalln(err)
 		}
 	} else {
-		StartHttpGatewayServer()
+		StartInsecureServer()
 	}
 }
 
-func grpcHandlerFunc(grpcServer *grpc.Server, grpcWebServer *grpcweb.WrappedGrpcServer, otherHandler http.Handler, oa http.Handler) http.Handler {
+func grpcHandlerFunc(grpcServer *grpc.Server, grpcWebServer *grpcweb.WrappedGrpcServer, restHandler http.Handler, oa http.Handler) http.Handler {
 
 	return h2c.NewHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("handling request")
 		grpclog.Infof("url: %v\r\n\r\ncontent type: %v\r\n\r\n", r.URL.Path, r.Header.Get("Content-Type"))
 		if strings.Contains(r.Header.Get("Content-Type"), "application/grpc-web+proto") {
 			grpclog.Infoln("grpc-web request")
@@ -113,7 +115,7 @@ func grpcHandlerFunc(grpcServer *grpc.Server, grpcWebServer *grpcweb.WrappedGrpc
 
 		if matched, err := regexp.MatchString("v\\d", r.URL.Path); err == nil && matched {
 			grpclog.Infoln("rest api request")
-			otherHandler.ServeHTTP(w, r)
+			restHandler.ServeHTTP(w, r)
 			return
 		}
 
@@ -122,7 +124,9 @@ func grpcHandlerFunc(grpcServer *grpc.Server, grpcWebServer *grpcweb.WrappedGrpc
 	}), &http2.Server{})
 }
 
-func StartHttpGatewayServer() {
+func StartInsecureServer() {
+	wg := sync.WaitGroup{}
+
 	grpcServer := grpc.NewServer()
 
 	wrappedServer := grpcweb.WrapServer(grpcServer)
@@ -135,13 +139,33 @@ func StartHttpGatewayServer() {
 
 	dopts := []grpc.DialOption{grpc.WithInsecure()}
 
-	err := propertyProsApi.RegisterNotePurchaseAgreementServiceHandlerFromEndpoint(ctx, gwmux, "localhost:8020", dopts)
+	host := "0.0.0.0"
+	port := "8020"
+	scheme := "dns:///"
+
+	serverUrl := fmt.Sprintf("%v:%v", host, port)
+	dialUrl := fmt.Sprintf("%vlocalhost:%v", scheme, port)
+
+	fmt.Println("server url: ", serverUrl)
+	fmt.Println("dial url: ", dialUrl)
+
+	wg.Add(1)
+
+	go func() {
+		fmt.Println("Listening on 8020")
+		if err := http.ListenAndServe(serverUrl, grpcHandlerFunc(grpcServer, wrappedServer, gwmux, getOpenAPIHandler())); err != nil {
+			fmt.Println("Http listener failed: ", err)
+			wg.Done()
+		}
+	}()
+
+	err := propertyProsApi.RegisterNotePurchaseAgreementServiceHandlerFromEndpoint(ctx, gwmux, dialUrl, dopts)
 
 	if err != nil {
 		grpclog.Fatalf("failed starting http server: %v", err)
 	}
 
-	http.ListenAndServe(":8020", grpcHandlerFunc(grpcServer, wrappedServer, gwmux, getOpenAPIHandler()))
+	wg.Wait()
 }
 
 func getOpenAPIHandler() http.Handler {

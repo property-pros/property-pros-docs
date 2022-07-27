@@ -2,32 +2,117 @@ package documents
 
 import (
 	"bytes"
-	"encoding/base64"
 	"encoding/json"
+	"errors"
+	"html"
+	"html/template"
 	"io"
+	"io/ioutil"
+	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/SebastiaanKlippert/go-wkhtmltopdf"
 	wkhtml "github.com/SebastiaanKlippert/go-wkhtmltopdf"
-	interfaces "github.com/vireocloud/property-pros-docs/Interfaces"
+	interfaces "github.com/vireocloud/property-pros-docs/interfaces"
+	"go.etcd.io/etcd/pkg/fileutil"
 )
 
 type Pdf struct {
+	*HtmlTemplateBase
 	interfaces.IDocument
 	pdfGenerator *wkhtml.PDFGenerator
+	content      string
 }
 
-func (p *Pdf) AddPage(reader io.Reader) {
+func (p *Pdf) AddPage(reader io.Reader) error {
 
-	page := wkhtml.NewPageReader(reader)
+	buffer, err := ioutil.ReadAll(reader)
+
+	if err != nil {
+		return err
+	}
+
+	contentFile, _ := p.savePageToTempFile(string(buffer))
+	return p.addPageToInternalPdfManager(contentFile)
+}
+
+func (p *Pdf) savePageToTempFile(content string) (*os.File, error) {
+
+	ex, err := os.Executable()
+	if err != nil {
+		return nil, err
+	}
+	exPath := filepath.Dir(ex)
+
+	file, err := ioutil.TempFile(exPath, "notepurchaseagreement*.html")
+
+	if err != nil {
+		return file, err
+	}
+
+	pageContent := &strings.Builder{}
+	p.HtmlTemplateBase.template.Execute(pageContent, &PdfPageTemplate{
+		Content: template.HTML(content),
+	})
+
+	file.WriteString(pageContent.String())
+
+	return file, nil
+}
+
+func (p *Pdf) addPageToInternalPdfManager(file *os.File) error {
+
+	page := wkhtml.NewPage(file.Name())
+
+	page.DisableSmartShrinking.Set(false)
+
+	page.EnableLocalFileAccess.Set(true)
+	page.LoadErrorHandling.Set("ignore")
 
 	p.pdfGenerator.AddPage(page)
+
+	return nil
 }
 
-func (p *Pdf) GetFileContent() io.Reader {
-	return bytes.NewReader(p.pdfGenerator.Bytes())
+func (p *Pdf) prepContent() error {
+	return nil
+}
+
+func (p *Pdf) SetPages(readers []io.Reader) {
+
+	pages := []wkhtml.PageProvider{}
+
+	for _, reader := range readers {
+		page := wkhtml.NewPageReader(reader)
+
+		page.DisableSmartShrinking.Set(false)
+		page.EnableLocalFileAccess.Set(true)
+
+		pages = append(pages, page)
+	}
+
+	p.pdfGenerator.SetPages(pages)
+}
+
+func (p *Pdf) GetFileContent() (io.Reader, error) {
+
+	p.prepContent()
+	// log.Println("contents: ", p.content)
+	err := p.pdfGenerator.Create()
+
+	return bytes.NewReader(p.pdfGenerator.Bytes()), err
+}
+
+func (p *Pdf) Copy() interfaces.IDocument {
+	document := *p
+
+	return &document
 }
 
 func (p *Pdf) SaveDocumentToFile(filePath string) error {
+
+	p.prepContent()
 
 	err := p.pdfGenerator.Create()
 
@@ -39,6 +124,7 @@ func (p *Pdf) SaveDocumentToFile(filePath string) error {
 }
 
 func (p *Pdf) GetHtml() (string, error) {
+	p.prepContent()
 
 	jsonData, err := p.pdfGenerator.ToJSON()
 
@@ -62,9 +148,29 @@ func (p *Pdf) GetHtml() (string, error) {
 		return "", nil
 	}
 
-	encodedHtml, err := base64.StdEncoding.DecodeString(pdfMap.Pages[0].Base64PageData)
+	inputFile := pdfMap.Pages[0].InputFile
 
-	return string(encodedHtml), err
+	if fileutil.Exist(inputFile) {
+		fileContent, err := ioutil.ReadFile(inputFile)
+
+		return html.UnescapeString(string(fileContent)), err
+	}
+
+	return "", errors.New("Failed to read pdf content")
+}
+
+func NewPdf(pdfGenerator *wkhtmltopdf.PDFGenerator, template *HtmlTemplateBase) (*Pdf, error) {
+
+	pdfGenerator.PageSize.Set("letter")
+
+	return &Pdf{
+		HtmlTemplateBase: template,
+		pdfGenerator:     pdfGenerator,
+	}, nil
+}
+
+type PdfPageTemplate struct {
+	Content template.HTML
 }
 
 type PdfModel struct {
@@ -72,11 +178,5 @@ type PdfModel struct {
 }
 
 type PdfPageModel struct {
-	Base64PageData string
-}
-
-func NewPdf(pdfGenerator *wkhtmltopdf.PDFGenerator) *Pdf {
-	return &Pdf{
-		pdfGenerator: pdfGenerator,
-	}
+	InputFile string
 }

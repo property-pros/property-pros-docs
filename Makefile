@@ -9,6 +9,9 @@ resetTestServer:
 generate:
 	docker compose run buf generate
 	node ./build-utils/protoc-post-gen
+	make postGenerate
+postGenerate:
+	mv ./generated/proto/* ./generated
 renameDependencies:
 	mv ./proto/protoc-gen-openapiv2/options/openapiv2.js ./proto/protoc-gen-openapiv2/options/annotations_pb.js
 	mv ./proto/protoc-gen-openapiv2/options/openapiv2.d.ts ./proto/protoc-gen-openapiv2/options/annotations_pb.d.ts

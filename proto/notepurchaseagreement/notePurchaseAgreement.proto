@@ -1,11 +1,11 @@
 syntax = "proto3";
 
-package notepurchaseagreement;
+package notePurchaseAgreement;
 
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
-option go_package = "property-pros-docs/proto/connection/v1;connectionv1";
+option go_package = "property-pros-docs/proto/notePurchaseAgreement/v1;notePurchaseAgreement";
 
 message NotePuchaseAgreement {
   uint32 Id = 1;
@@ -31,7 +31,7 @@ service NotePurchaseAgreementService {
   rpc GetNotePurchaseAgreementDoc(GetNotePurchaseAgreementDocRequest) returns (GetNotePurchaseAgreementDocResponse) {
     option (google.api.http) = {
       // Route to this method from GET requests to /config
-      get: "/notepurchaseagreementdoc"
+      get: "/v1/notepurchaseagreementdoc"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "Get Note Purchase Agreement Document"

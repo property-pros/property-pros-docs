@@ -1,11 +1,11 @@
 version: "3.3"
-
 services:
   property-pros-test:
-    image: acim/go-reflex
+    build:
+      context: .
+      dockerfile: Dockerfile.test
     environment:
       - RACE_DETECTOR=1
-      - BUILD_ARGS=/app
       - RUN_ARGS=-enable_tls=false
     volumes:
       - .:/app

@@ -1,9 +1,10 @@
-package notepurchaseagreement
+package notePurchaseAgreement
 
 import (
+	"log"
 	"strings"
 
-	interfaces "github.com/vireocloud/property-pros-docs/Interfaces"
+	interfaces "github.com/vireocloud/property-pros-docs/interfaces"
 )
 
 type NotePurchaseAgreement struct {
@@ -19,12 +20,16 @@ type NotePurchaseAgreement struct {
 	FundsCommitted uint64
 }
 
-func (n *NotePurchaseAgreement) ToDoc() interfaces.IDocument {
-	for _, page := range n.pages {
-		n.document.AddPage(strings.NewReader(page.ToString()))
+func (this *NotePurchaseAgreement) ToDoc() interfaces.IDocument {
+
+	document := this.document.Copy()
+
+	for _, page := range this.pages {
+		log.Println("page")
+		document.AddPage(strings.NewReader(page.ToString()))
 	}
 
-	return n.document
+	return document
 }
 
 func NewNotePurchaseAgreement(pages []string, document interfaces.IDocument) (*NotePurchaseAgreement, error) {
@@ -43,4 +48,5 @@ func NewNotePurchaseAgreement(pages []string, document interfaces.IDocument) (*N
 	doc.document = document
 
 	return doc, nil
+
 }
