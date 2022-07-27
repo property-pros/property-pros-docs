@@ -1,4 +1,4 @@
-module github.com/vireocloud/property-pros-docs.git
+module github.com/vireocloud/property-pros-docs
 
 go 1.18
 
@@ -6,7 +6,6 @@ require (
 	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.7.2
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.10.3
 	github.com/improbable-eng/grpc-web v0.15.0
-	github.com/omeid/uconfig v1.2.0
 	go.etcd.io/etcd v0.0.0-20191023171146-3cf2f69b5738
 	golang.org/x/net v0.0.0-20220531201128-c960675eff93
 	google.golang.org/genproto v0.0.0-20220602131408-e326c6e8e9c8
@@ -21,12 +20,7 @@ require (
 	github.com/coreos/pkg v0.0.0-20160727233714-3ac0863d7acf // indirect
 	github.com/desertbit/timer v0.0.0-20180107155436-c41aec40b27f // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
-	github.com/howeyc/fsnotify v0.9.0 // indirect
 	github.com/klauspost/compress v1.11.7 // indirect
-	github.com/mattn/go-colorable v0.0.9 // indirect
-	github.com/mattn/go-isatty v0.0.12 // indirect
-	github.com/pilu/config v0.0.0-20131214182432-3eb99e6c0b9a // indirect
-	github.com/pilu/fresh v0.0.0-20190826141211-0fa698148017 // indirect
 	github.com/rs/cors v1.7.0 // indirect
 	go.uber.org/atomic v1.5.0 // indirect
 	go.uber.org/multierr v1.3.0 // indirect
