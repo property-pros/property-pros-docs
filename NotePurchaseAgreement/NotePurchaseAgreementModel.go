@@ -1,7 +1,6 @@
 package notePurchaseAgreement
 
 import (
-	"log"
 	"strings"
 
 	interfaces "github.com/vireocloud/property-pros-docs/interfaces"
@@ -25,7 +24,6 @@ func (this *NotePurchaseAgreement) ToDoc() interfaces.IDocument {
 	document := this.document.Copy()
 
 	for _, page := range this.pages {
-		log.Println("page")
 		document.AddPage(strings.NewReader(page.ToString()))
 	}
 

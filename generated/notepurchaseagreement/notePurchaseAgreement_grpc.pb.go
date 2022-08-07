@@ -19,6 +19,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type NotePurchaseAgreementServiceClient interface {
 	GetNotePurchaseAgreementDoc(ctx context.Context, in *GetNotePurchaseAgreementDocRequest, opts ...grpc.CallOption) (*GetNotePurchaseAgreementDocResponse, error)
+	SaveNotePurchaseAgreement(ctx context.Context, in *SaveNotePurchaseAgreementRequest, opts ...grpc.CallOption) (*SaveNotePurchaseAgreementResponse, error)
 }
 
 type notePurchaseAgreementServiceClient struct {
@@ -38,11 +39,21 @@ func (c *notePurchaseAgreementServiceClient) GetNotePurchaseAgreementDoc(ctx con
 	return out, nil
 }
 
+func (c *notePurchaseAgreementServiceClient) SaveNotePurchaseAgreement(ctx context.Context, in *SaveNotePurchaseAgreementRequest, opts ...grpc.CallOption) (*SaveNotePurchaseAgreementResponse, error) {
+	out := new(SaveNotePurchaseAgreementResponse)
+	err := c.cc.Invoke(ctx, "/notePurchaseAgreement.NotePurchaseAgreementService/SaveNotePurchaseAgreement", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // NotePurchaseAgreementServiceServer is the server API for NotePurchaseAgreementService service.
 // All implementations must embed UnimplementedNotePurchaseAgreementServiceServer
 // for forward compatibility
 type NotePurchaseAgreementServiceServer interface {
 	GetNotePurchaseAgreementDoc(context.Context, *GetNotePurchaseAgreementDocRequest) (*GetNotePurchaseAgreementDocResponse, error)
+	SaveNotePurchaseAgreement(context.Context, *SaveNotePurchaseAgreementRequest) (*SaveNotePurchaseAgreementResponse, error)
 	mustEmbedUnimplementedNotePurchaseAgreementServiceServer()
 }
 
@@ -52,6 +63,9 @@ type UnimplementedNotePurchaseAgreementServiceServer struct {
 
 func (UnimplementedNotePurchaseAgreementServiceServer) GetNotePurchaseAgreementDoc(context.Context, *GetNotePurchaseAgreementDocRequest) (*GetNotePurchaseAgreementDocResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetNotePurchaseAgreementDoc not implemented")
+}
+func (UnimplementedNotePurchaseAgreementServiceServer) SaveNotePurchaseAgreement(context.Context, *SaveNotePurchaseAgreementRequest) (*SaveNotePurchaseAgreementResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SaveNotePurchaseAgreement not implemented")
 }
 func (UnimplementedNotePurchaseAgreementServiceServer) mustEmbedUnimplementedNotePurchaseAgreementServiceServer() {
 }
@@ -85,6 +99,24 @@ func _NotePurchaseAgreementService_GetNotePurchaseAgreementDoc_Handler(srv inter
 	return interceptor(ctx, in, info, handler)
 }
 
+func _NotePurchaseAgreementService_SaveNotePurchaseAgreement_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SaveNotePurchaseAgreementRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NotePurchaseAgreementServiceServer).SaveNotePurchaseAgreement(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/notePurchaseAgreement.NotePurchaseAgreementService/SaveNotePurchaseAgreement",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NotePurchaseAgreementServiceServer).SaveNotePurchaseAgreement(ctx, req.(*SaveNotePurchaseAgreementRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // NotePurchaseAgreementService_ServiceDesc is the grpc.ServiceDesc for NotePurchaseAgreementService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -95,6 +127,10 @@ var NotePurchaseAgreementService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetNotePurchaseAgreementDoc",
 			Handler:    _NotePurchaseAgreementService_GetNotePurchaseAgreementDoc_Handler,
+		},
+		{
+			MethodName: "SaveNotePurchaseAgreement",
+			Handler:    _NotePurchaseAgreementService_SaveNotePurchaseAgreement_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

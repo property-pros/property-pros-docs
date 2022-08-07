@@ -43,6 +43,30 @@
         ]
       }
     },
+    "/v1/notepurchaseagreement": {
+      "post": {
+        "summary": "Save Note Purchase Agreement Document",
+        "description": "Saves a note purchase agreement filled out with customer data.",
+        "operationId": "NotePurchaseAgreementService_SaveNotePurchaseAgreement",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/notePurchaseAgreementSaveNotePurchaseAgreementResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "NotePurchaseAgreement"
+        ]
+      }
+    },
     "/v1/notepurchaseagreementdoc": {
       "get": {
         "summary": "Get Note Purchase Agreement Document",
@@ -193,6 +217,15 @@
         "FundsCommitted": {
           "type": "string",
           "format": "uint64"
+        }
+      }
+    },
+    "notePurchaseAgreementSaveNotePurchaseAgreementResponse": {
+      "type": "object",
+      "properties": {
+        "Id": {
+          "type": "integer",
+          "format": "int64"
         }
       }
     },

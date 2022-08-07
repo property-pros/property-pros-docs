@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package auth;
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "property-pros-docs/proto/auth/v1;auth";
+
+message User {
+  uint32 id = 1;
+  string email_address = 2;
+  string password = 3;
+}
+
+message AuthenticateUserRequest {
+  User payload = 1;
+}
+
+message AuthenticateUserResponse {
+  bool authenticated = 1;
+  string error_message = 2;
+}
+
+service AuthenticationService {
+  rpc AuthenticateUser(AuthenticateUserRequest) returns (AuthenticateUserResponse) {
+    option (google.api.http) = {
+      // Route to this method from GET requests to /config
+      post: "/v1/authenticate-user"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Authenticates a user by username and password"
+      description: "Authenticates a user by username and password"
+      tags: "Authentication"
+    };
+  }
+}
