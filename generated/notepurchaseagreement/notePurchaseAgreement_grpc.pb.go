@@ -31,7 +31,7 @@ func NewNotePurchaseAgreementServiceClient(cc grpc.ClientConnInterface) NotePurc
 
 func (c *notePurchaseAgreementServiceClient) GetNotePurchaseAgreementDoc(ctx context.Context, in *GetNotePurchaseAgreementDocRequest, opts ...grpc.CallOption) (*GetNotePurchaseAgreementDocResponse, error) {
 	out := new(GetNotePurchaseAgreementDocResponse)
-	err := c.cc.Invoke(ctx, "/notepurchaseagreement.NotePurchaseAgreementService/GetNotePurchaseAgreementDoc", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/notePurchaseAgreement.NotePurchaseAgreementService/GetNotePurchaseAgreementDoc", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +77,7 @@ func _NotePurchaseAgreementService_GetNotePurchaseAgreementDoc_Handler(srv inter
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/notepurchaseagreement.NotePurchaseAgreementService/GetNotePurchaseAgreementDoc",
+		FullMethod: "/notePurchaseAgreement.NotePurchaseAgreementService/GetNotePurchaseAgreementDoc",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(NotePurchaseAgreementServiceServer).GetNotePurchaseAgreementDoc(ctx, req.(*GetNotePurchaseAgreementDocRequest))
@@ -89,7 +89,7 @@ func _NotePurchaseAgreementService_GetNotePurchaseAgreementDoc_Handler(srv inter
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var NotePurchaseAgreementService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "notepurchaseagreement.NotePurchaseAgreementService",
+	ServiceName: "notePurchaseAgreement.NotePurchaseAgreementService",
 	HandlerType: (*NotePurchaseAgreementServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

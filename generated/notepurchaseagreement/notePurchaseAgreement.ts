@@ -1,11 +1,11 @@
 /* eslint-disable */
 import { CallContext, CallOptions } from "nice-grpc-common";
 import Long from "long";
-import * as _m0 from "protobufjs/minimal";
+import _m0 from "protobufjs/minimal";
 
-export const protobufPackage = "notepurchaseagreement";
+export const protobufPackage = "notePurchaseAgreement";
 
-export interface NotePuchaseAgreement {
+export interface NotePurchaseAgreement {
   Id: number;
   FirstName: string;
   LastName: string;
@@ -18,14 +18,14 @@ export interface NotePuchaseAgreement {
 }
 
 export interface GetNotePurchaseAgreementDocRequest {
-  payload: NotePuchaseAgreement | undefined;
+  payload: NotePurchaseAgreement | undefined;
 }
 
 export interface GetNotePurchaseAgreementDocResponse {
   fileContent: Uint8Array;
 }
 
-function createBaseNotePuchaseAgreement(): NotePuchaseAgreement {
+function createBaseNotePurchaseAgreement(): NotePurchaseAgreement {
   return {
     Id: 0,
     FirstName: "",
@@ -39,9 +39,9 @@ function createBaseNotePuchaseAgreement(): NotePuchaseAgreement {
   };
 }
 
-export const NotePuchaseAgreement = {
+export const NotePurchaseAgreement = {
   encode(
-    message: NotePuchaseAgreement,
+    message: NotePurchaseAgreement,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     if (message.Id !== 0) {
@@ -77,10 +77,10 @@ export const NotePuchaseAgreement = {
   decode(
     input: _m0.Reader | Uint8Array,
     length?: number
-  ): NotePuchaseAgreement {
+  ): NotePurchaseAgreement {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseNotePuchaseAgreement();
+    const message = createBaseNotePurchaseAgreement();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -119,7 +119,7 @@ export const NotePuchaseAgreement = {
     return message;
   },
 
-  fromJSON(object: any): NotePuchaseAgreement {
+  fromJSON(object: any): NotePurchaseAgreement {
     return {
       Id: isSet(object.Id) ? Number(object.Id) : 0,
       FirstName: isSet(object.FirstName) ? String(object.FirstName) : "",
@@ -139,7 +139,7 @@ export const NotePuchaseAgreement = {
     };
   },
 
-  toJSON(message: NotePuchaseAgreement): unknown {
+  toJSON(message: NotePurchaseAgreement): unknown {
     const obj: any = {};
     message.Id !== undefined && (obj.Id = Math.round(message.Id));
     message.FirstName !== undefined && (obj.FirstName = message.FirstName);
@@ -159,8 +159,10 @@ export const NotePuchaseAgreement = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<NotePuchaseAgreement>): NotePuchaseAgreement {
-    const message = createBaseNotePuchaseAgreement();
+  fromPartial(
+    object: DeepPartial<NotePurchaseAgreement>
+  ): NotePurchaseAgreement {
+    const message = createBaseNotePurchaseAgreement();
     message.Id = object.Id ?? 0;
     message.FirstName = object.FirstName ?? "";
     message.LastName = object.LastName ?? "";
@@ -184,7 +186,7 @@ export const GetNotePurchaseAgreementDocRequest = {
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     if (message.payload !== undefined) {
-      NotePuchaseAgreement.encode(
+      NotePurchaseAgreement.encode(
         message.payload,
         writer.uint32(10).fork()
       ).ldelim();
@@ -203,7 +205,7 @@ export const GetNotePurchaseAgreementDocRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.payload = NotePuchaseAgreement.decode(
+          message.payload = NotePurchaseAgreement.decode(
             reader,
             reader.uint32()
           );
@@ -219,7 +221,7 @@ export const GetNotePurchaseAgreementDocRequest = {
   fromJSON(object: any): GetNotePurchaseAgreementDocRequest {
     return {
       payload: isSet(object.payload)
-        ? NotePuchaseAgreement.fromJSON(object.payload)
+        ? NotePurchaseAgreement.fromJSON(object.payload)
         : undefined,
     };
   },
@@ -228,7 +230,7 @@ export const GetNotePurchaseAgreementDocRequest = {
     const obj: any = {};
     message.payload !== undefined &&
       (obj.payload = message.payload
-        ? NotePuchaseAgreement.toJSON(message.payload)
+        ? NotePurchaseAgreement.toJSON(message.payload)
         : undefined);
     return obj;
   },
@@ -239,7 +241,7 @@ export const GetNotePurchaseAgreementDocRequest = {
     const message = createBaseGetNotePurchaseAgreementDocRequest();
     message.payload =
       object.payload !== undefined && object.payload !== null
-        ? NotePuchaseAgreement.fromPartial(object.payload)
+        ? NotePurchaseAgreement.fromPartial(object.payload)
         : undefined;
     return message;
   },
@@ -313,7 +315,7 @@ export type NotePurchaseAgreementServiceDefinition =
   typeof NotePurchaseAgreementServiceDefinition;
 export const NotePurchaseAgreementServiceDefinition = {
   name: "NotePurchaseAgreementService",
-  fullName: "notepurchaseagreement.NotePurchaseAgreementService",
+  fullName: "notePurchaseAgreement.NotePurchaseAgreementService",
   methods: {
     getNotePurchaseAgreementDoc: {
       name: "GetNotePurchaseAgreementDoc",
@@ -353,27 +355,29 @@ var globalThis: any = (() => {
   throw "Unable to locate global object";
 })();
 
-const atob: (b64: string) => string =
-  globalThis.atob ||
-  ((b64) => globalThis.Buffer.from(b64, "base64").toString("binary"));
 function bytesFromBase64(b64: string): Uint8Array {
-  const bin = atob(b64);
-  const arr = new Uint8Array(bin.length);
-  for (let i = 0; i < bin.length; ++i) {
-    arr[i] = bin.charCodeAt(i);
+  if (globalThis.Buffer) {
+    return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
+  } else {
+    const bin = globalThis.atob(b64);
+    const arr = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; ++i) {
+      arr[i] = bin.charCodeAt(i);
+    }
+    return arr;
   }
-  return arr;
 }
 
-const btoa: (bin: string) => string =
-  globalThis.btoa ||
-  ((bin) => globalThis.Buffer.from(bin, "binary").toString("base64"));
 function base64FromBytes(arr: Uint8Array): string {
-  const bin: string[] = [];
-  arr.forEach((byte) => {
-    bin.push(String.fromCharCode(byte));
-  });
-  return btoa(bin.join(""));
+  if (globalThis.Buffer) {
+    return globalThis.Buffer.from(arr).toString("base64");
+  } else {
+    const bin: string[] = [];
+    arr.forEach((byte) => {
+      bin.push(String.fromCharCode(byte));
+    });
+    return globalThis.btoa(bin.join(""));
+  }
 }
 
 type Builtin =

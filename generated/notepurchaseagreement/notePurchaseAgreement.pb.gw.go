@@ -79,7 +79,7 @@ func RegisterNotePurchaseAgreementServiceHandlerServer(ctx context.Context, mux 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/notepurchaseagreement.NotePurchaseAgreementService/GetNotePurchaseAgreementDoc", runtime.WithHTTPPathPattern("/notepurchaseagreementdoc"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/notePurchaseAgreement.NotePurchaseAgreementService/GetNotePurchaseAgreementDoc", runtime.WithHTTPPathPattern("/v1/notepurchaseagreementdoc"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -141,7 +141,7 @@ func RegisterNotePurchaseAgreementServiceHandlerClient(ctx context.Context, mux 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/notepurchaseagreement.NotePurchaseAgreementService/GetNotePurchaseAgreementDoc", runtime.WithHTTPPathPattern("/notepurchaseagreementdoc"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/notePurchaseAgreement.NotePurchaseAgreementService/GetNotePurchaseAgreementDoc", runtime.WithHTTPPathPattern("/v1/notepurchaseagreementdoc"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -161,7 +161,7 @@ func RegisterNotePurchaseAgreementServiceHandlerClient(ctx context.Context, mux 
 }
 
 var (
-	pattern_NotePurchaseAgreementService_GetNotePurchaseAgreementDoc_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"notepurchaseagreementdoc"}, ""))
+	pattern_NotePurchaseAgreementService_GetNotePurchaseAgreementDoc_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "notepurchaseagreementdoc"}, ""))
 )
 
 var (
