@@ -5,7 +5,7 @@ import _m0 from "protobufjs/minimal";
 export const protobufPackage = "auth";
 
 export interface User {
-  id: number;
+  id: string;
   emailAddress: string;
   password: string;
 }
@@ -20,13 +20,13 @@ export interface AuthenticateUserResponse {
 }
 
 function createBaseUser(): User {
-  return { id: 0, emailAddress: "", password: "" };
+  return { id: "", emailAddress: "", password: "" };
 }
 
 export const User = {
   encode(message: User, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== 0) {
-      writer.uint32(8).uint32(message.id);
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
     }
     if (message.emailAddress !== "") {
       writer.uint32(18).string(message.emailAddress);
@@ -45,7 +45,7 @@ export const User = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.id = reader.uint32();
+          message.id = reader.string();
           break;
         case 2:
           message.emailAddress = reader.string();
@@ -63,7 +63,7 @@ export const User = {
 
   fromJSON(object: any): User {
     return {
-      id: isSet(object.id) ? Number(object.id) : 0,
+      id: isSet(object.id) ? String(object.id) : "",
       emailAddress: isSet(object.emailAddress)
         ? String(object.emailAddress)
         : "",
@@ -73,7 +73,7 @@ export const User = {
 
   toJSON(message: User): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = Math.round(message.id));
+    message.id !== undefined && (obj.id = message.id);
     message.emailAddress !== undefined &&
       (obj.emailAddress = message.emailAddress);
     message.password !== undefined && (obj.password = message.password);
@@ -82,7 +82,7 @@ export const User = {
 
   fromPartial(object: DeepPartial<User>): User {
     const message = createBaseUser();
-    message.id = object.id ?? 0;
+    message.id = object.id ?? "";
     message.emailAddress = object.emailAddress ?? "";
     message.password = object.password ?? "";
     return message;
