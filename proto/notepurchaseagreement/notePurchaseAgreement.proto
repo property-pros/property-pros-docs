@@ -8,7 +8,7 @@ import "protoc-gen-openapiv2/options/annotations.proto";
 option go_package = "property-pros-docs/proto/notePurchaseAgreement/v1;notePurchaseAgreement";
 
 message NotePurchaseAgreement {
-  uint32 Id = 1;
+  string Id = 1;
   string FirstName = 2;
   string LastName = 3;
   string DateOfBirth = 4;
@@ -32,7 +32,7 @@ message SaveNotePurchaseAgreementRequest {
 }
 
 message SaveNotePurchaseAgreementResponse {
-  uint32 Id = 1;
+  string Id = 1;
 }
 
 service NotePurchaseAgreementService {

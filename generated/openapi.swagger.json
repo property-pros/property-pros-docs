@@ -91,8 +91,7 @@
             "name": "payload.Id",
             "in": "query",
             "required": false,
-            "type": "integer",
-            "format": "int64"
+            "type": "string"
           },
           {
             "name": "payload.FirstName",
@@ -190,8 +189,7 @@
       "type": "object",
       "properties": {
         "Id": {
-          "type": "integer",
-          "format": "int64"
+          "type": "string"
         },
         "FirstName": {
           "type": "string"
@@ -224,8 +222,7 @@
       "type": "object",
       "properties": {
         "Id": {
-          "type": "integer",
-          "format": "int64"
+          "type": "string"
         }
       }
     },

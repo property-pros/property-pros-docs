@@ -6,7 +6,7 @@ import _m0 from "protobufjs/minimal";
 export const protobufPackage = "notePurchaseAgreement";
 
 export interface NotePurchaseAgreement {
-  Id: number;
+  Id: string;
   FirstName: string;
   LastName: string;
   DateOfBirth: string;
@@ -30,12 +30,12 @@ export interface SaveNotePurchaseAgreementRequest {
 }
 
 export interface SaveNotePurchaseAgreementResponse {
-  Id: number;
+  Id: string;
 }
 
 function createBaseNotePurchaseAgreement(): NotePurchaseAgreement {
   return {
-    Id: 0,
+    Id: "",
     FirstName: "",
     LastName: "",
     DateOfBirth: "",
@@ -52,8 +52,8 @@ export const NotePurchaseAgreement = {
     message: NotePurchaseAgreement,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.Id !== 0) {
-      writer.uint32(8).uint32(message.Id);
+    if (message.Id !== "") {
+      writer.uint32(10).string(message.Id);
     }
     if (message.FirstName !== "") {
       writer.uint32(18).string(message.FirstName);
@@ -93,7 +93,7 @@ export const NotePurchaseAgreement = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.Id = reader.uint32();
+          message.Id = reader.string();
           break;
         case 2:
           message.FirstName = reader.string();
@@ -129,7 +129,7 @@ export const NotePurchaseAgreement = {
 
   fromJSON(object: any): NotePurchaseAgreement {
     return {
-      Id: isSet(object.Id) ? Number(object.Id) : 0,
+      Id: isSet(object.Id) ? String(object.Id) : "",
       FirstName: isSet(object.FirstName) ? String(object.FirstName) : "",
       LastName: isSet(object.LastName) ? String(object.LastName) : "",
       DateOfBirth: isSet(object.DateOfBirth) ? String(object.DateOfBirth) : "",
@@ -149,7 +149,7 @@ export const NotePurchaseAgreement = {
 
   toJSON(message: NotePurchaseAgreement): unknown {
     const obj: any = {};
-    message.Id !== undefined && (obj.Id = Math.round(message.Id));
+    message.Id !== undefined && (obj.Id = message.Id);
     message.FirstName !== undefined && (obj.FirstName = message.FirstName);
     message.LastName !== undefined && (obj.LastName = message.LastName);
     message.DateOfBirth !== undefined &&
@@ -171,7 +171,7 @@ export const NotePurchaseAgreement = {
     object: DeepPartial<NotePurchaseAgreement>
   ): NotePurchaseAgreement {
     const message = createBaseNotePurchaseAgreement();
-    message.Id = object.Id ?? 0;
+    message.Id = object.Id ?? "";
     message.FirstName = object.FirstName ?? "";
     message.LastName = object.LastName ?? "";
     message.DateOfBirth = object.DateOfBirth ?? "";
@@ -391,7 +391,7 @@ export const SaveNotePurchaseAgreementRequest = {
 };
 
 function createBaseSaveNotePurchaseAgreementResponse(): SaveNotePurchaseAgreementResponse {
-  return { Id: 0 };
+  return { Id: "" };
 }
 
 export const SaveNotePurchaseAgreementResponse = {
@@ -399,8 +399,8 @@ export const SaveNotePurchaseAgreementResponse = {
     message: SaveNotePurchaseAgreementResponse,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.Id !== 0) {
-      writer.uint32(8).uint32(message.Id);
+    if (message.Id !== "") {
+      writer.uint32(10).string(message.Id);
     }
     return writer;
   },
@@ -416,7 +416,7 @@ export const SaveNotePurchaseAgreementResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.Id = reader.uint32();
+          message.Id = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -428,13 +428,13 @@ export const SaveNotePurchaseAgreementResponse = {
 
   fromJSON(object: any): SaveNotePurchaseAgreementResponse {
     return {
-      Id: isSet(object.Id) ? Number(object.Id) : 0,
+      Id: isSet(object.Id) ? String(object.Id) : "",
     };
   },
 
   toJSON(message: SaveNotePurchaseAgreementResponse): unknown {
     const obj: any = {};
-    message.Id !== undefined && (obj.Id = Math.round(message.Id));
+    message.Id !== undefined && (obj.Id = message.Id);
     return obj;
   },
 
@@ -442,7 +442,7 @@ export const SaveNotePurchaseAgreementResponse = {
     object: DeepPartial<SaveNotePurchaseAgreementResponse>
   ): SaveNotePurchaseAgreementResponse {
     const message = createBaseSaveNotePurchaseAgreementResponse();
-    message.Id = object.Id ?? 0;
+    message.Id = object.Id ?? "";
     return message;
   },
 };
