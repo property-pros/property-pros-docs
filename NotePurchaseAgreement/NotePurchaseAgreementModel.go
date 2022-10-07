@@ -1,4 +1,4 @@
-package notePurchaseAgreement
+package notepurchaseagreement
 
 import (
 	"strings"

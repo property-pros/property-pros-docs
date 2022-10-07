@@ -2,9 +2,9 @@
 // versions:
 // 	protoc-gen-go v1.27.1
 // 	protoc        (unknown)
-// source: proto/notepurchaseagreement/notePurchaseAgreement.proto
+// source: proto/notepurchaseagreement/notepurchaseagreement.proto
 
-package notePurchaseAgreement
+package notepurchaseagreement
 
 import (
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
@@ -438,19 +438,19 @@ func file_proto_notepurchaseagreement_notePurchaseAgreement_proto_rawDescGZIP() 
 
 var file_proto_notepurchaseagreement_notePurchaseAgreement_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_proto_notepurchaseagreement_notePurchaseAgreement_proto_goTypes = []interface{}{
-	(*NotePurchaseAgreement)(nil),               // 0: notePurchaseAgreement.NotePurchaseAgreement
-	(*GetNotePurchaseAgreementDocRequest)(nil),  // 1: notePurchaseAgreement.GetNotePurchaseAgreementDocRequest
-	(*GetNotePurchaseAgreementDocResponse)(nil), // 2: notePurchaseAgreement.GetNotePurchaseAgreementDocResponse
-	(*SaveNotePurchaseAgreementRequest)(nil),    // 3: notePurchaseAgreement.SaveNotePurchaseAgreementRequest
-	(*SaveNotePurchaseAgreementResponse)(nil),   // 4: notePurchaseAgreement.SaveNotePurchaseAgreementResponse
+	(*NotePurchaseAgreement)(nil),               // 0: notepurchaseagreement.NotePurchaseAgreement
+	(*GetNotePurchaseAgreementDocRequest)(nil),  // 1: notepurchaseagreement.GetNotePurchaseAgreementDocRequest
+	(*GetNotePurchaseAgreementDocResponse)(nil), // 2: notepurchaseagreement.GetNotePurchaseAgreementDocResponse
+	(*SaveNotePurchaseAgreementRequest)(nil),    // 3: notepurchaseagreement.SaveNotePurchaseAgreementRequest
+	(*SaveNotePurchaseAgreementResponse)(nil),   // 4: notepurchaseagreement.SaveNotePurchaseAgreementResponse
 }
 var file_proto_notepurchaseagreement_notePurchaseAgreement_proto_depIdxs = []int32{
-	0, // 0: notePurchaseAgreement.GetNotePurchaseAgreementDocRequest.payload:type_name -> notePurchaseAgreement.NotePurchaseAgreement
-	0, // 1: notePurchaseAgreement.SaveNotePurchaseAgreementRequest.payload:type_name -> notePurchaseAgreement.NotePurchaseAgreement
-	1, // 2: notePurchaseAgreement.NotePurchaseAgreementService.GetNotePurchaseAgreementDoc:input_type -> notePurchaseAgreement.GetNotePurchaseAgreementDocRequest
-	3, // 3: notePurchaseAgreement.NotePurchaseAgreementService.SaveNotePurchaseAgreement:input_type -> notePurchaseAgreement.SaveNotePurchaseAgreementRequest
-	2, // 4: notePurchaseAgreement.NotePurchaseAgreementService.GetNotePurchaseAgreementDoc:output_type -> notePurchaseAgreement.GetNotePurchaseAgreementDocResponse
-	4, // 5: notePurchaseAgreement.NotePurchaseAgreementService.SaveNotePurchaseAgreement:output_type -> notePurchaseAgreement.SaveNotePurchaseAgreementResponse
+	0, // 0: notepurchaseagreement.GetNotePurchaseAgreementDocRequest.payload:type_name -> notepurchaseagreement.NotePurchaseAgreement
+	0, // 1: notepurchaseagreement.SaveNotePurchaseAgreementRequest.payload:type_name -> notepurchaseagreement.NotePurchaseAgreement
+	1, // 2: notepurchaseagreement.NotePurchaseAgreementService.GetNotePurchaseAgreementDoc:input_type -> notepurchaseagreement.GetNotePurchaseAgreementDocRequest
+	3, // 3: notepurchaseagreement.NotePurchaseAgreementService.SaveNotePurchaseAgreement:input_type -> notepurchaseagreement.SaveNotePurchaseAgreementRequest
+	2, // 4: notepurchaseagreement.NotePurchaseAgreementService.GetNotePurchaseAgreementDoc:output_type -> notepurchaseagreement.GetNotePurchaseAgreementDocResponse
+	4, // 5: notepurchaseagreement.NotePurchaseAgreementService.SaveNotePurchaseAgreement:output_type -> notepurchaseagreement.SaveNotePurchaseAgreementResponse
 	4, // [4:6] is the sub-list for method output_type
 	2, // [2:4] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name

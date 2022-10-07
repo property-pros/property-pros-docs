@@ -16,7 +16,7 @@ import (
 )
 
 type NotePurchaseAgreementController struct {
-	propertyProsApi.UnsafeNotePurchaseAgreementServiceServer
+	propertyProsApi.UnimplementedNotePurchaseAgreementServiceServer
 }
 
 func (c *NotePurchaseAgreementController) GetNotePurchaseAgreementDoc(ctx context.Context, req *propertyProsApi.GetNotePurchaseAgreementDocRequest) (*propertyProsApi.GetNotePurchaseAgreementDocResponse, error) {
@@ -93,4 +93,4 @@ func (c *NotePurchaseAgreementController) GetNotePurchaseAgreementDoc(ctx contex
 	return response, nil
 }
 
-var _ propertyProsApi.NotePurchaseAgreementServiceServer = (*NotePurchaseAgreementController)(nil)
+// var _ propertyProsApi.NotePurchaseAgreementServiceServer = (*NotePurchaseAgreementController)(nil)
