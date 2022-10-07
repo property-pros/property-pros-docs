@@ -1,11 +1,11 @@
 syntax = "proto3";
 
-package notePurchaseAgreement;
+package notepurchaseagreement;
 
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
-option go_package = "property-pros-docs/proto/notePurchaseAgreement/v1;notePurchaseAgreement";
+option go_package = "property-pros-docs/proto/notepurchaseagreement/v1;notepurchaseagreement";
 
 message NotePurchaseAgreement {
   string Id = 1;

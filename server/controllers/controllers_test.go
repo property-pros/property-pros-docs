@@ -3,7 +3,7 @@ package controllers
 import (
 	"testing"
 
-	propertyProsApi "github.com/vireocloud/property-pros-docs/generated/notePurchaseAgreement"
+	propertyProsApi "github.com/vireocloud/property-pros-docs/generated/notepurchaseagreement"
 )
 
 func TestGetNotePurchaseAgreementDoc(t *testing.T) {

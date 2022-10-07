@@ -23,7 +23,7 @@ import (
 	"github.com/improbable-eng/grpc-web/go/grpcweb"
 	"github.com/vireocloud/property-pros-docs/server/gateway"
 
-	propertyProsApi "github.com/vireocloud/property-pros-docs/generated/notePurchaseAgreement"
+	propertyProsApi "github.com/vireocloud/property-pros-docs/generated/notepurchaseagreement"
 	controllers "github.com/vireocloud/property-pros-docs/server/controllers"
 	"github.com/vireocloud/property-pros-docs/server/third_party"
 )

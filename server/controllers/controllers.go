@@ -10,9 +10,9 @@ import (
 
 	"github.com/SebastiaanKlippert/go-wkhtmltopdf"
 	documents "github.com/vireocloud/property-pros-docs/documents"
-	propertyProsApi "github.com/vireocloud/property-pros-docs/generated/notePurchaseAgreement"
-	notepurchaseagreement "github.com/vireocloud/property-pros-docs/notePurchaseAgreement"
-	pagesContent "github.com/vireocloud/property-pros-docs/notePurchaseAgreement/content"
+	propertyProsApi "github.com/vireocloud/property-pros-docs/generated/notepurchaseagreement"
+	notepurchaseagreement "github.com/vireocloud/property-pros-docs/notepurchaseagreement"
+	pagesContent "github.com/vireocloud/property-pros-docs/notepurchaseagreement/content"
 )
 
 type NotePurchaseAgreementController struct {
