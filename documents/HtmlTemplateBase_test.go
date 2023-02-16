@@ -22,7 +22,7 @@ func TestHtmlTemplateBase(t *testing.T) {
 	}
 
 	if page1 == nil {
-		t.Errorf("unexpected nil returned from NewNotePurchaseAgreementPage(0)")
+		t.Fatalf("unexpected nil returned from NewNotePurchaseAgreementPage(0)")
 	}
 
 	if page1.templatePath != "notePurchaseAgreementPage0" {

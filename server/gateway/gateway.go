@@ -12,9 +12,9 @@ import (
 	"strings"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	pbExample "github.com/vireocloud/property-pros-docs/generated/notepurchaseagreement"
 	lumerinInsecure "github.com/vireocloud/property-pros-docs/server/insecure"
 	"github.com/vireocloud/property-pros-docs/server/third_party"
+	pbExample "github.com/vireocloud/property-pros-sdk/api/note_purchase_agreement/v1"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/insecure"

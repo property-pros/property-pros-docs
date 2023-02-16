@@ -3,14 +3,14 @@ package controllers
 import (
 	"testing"
 
-	propertyProsApi "github.com/vireocloud/property-pros-docs/generated/notepurchaseagreement"
+	propertyProsApi "github.com/vireocloud/property-pros-sdk/api/note_purchase_agreement/v1"
 )
 
 func TestGetNotePurchaseAgreementDoc(t *testing.T) {
 	controller := &NotePurchaseAgreementController{}
 
 	result, err := controller.GetNotePurchaseAgreementDoc(nil, &propertyProsApi.GetNotePurchaseAgreementDocRequest{
-		Payload: &propertyProsApi.NotePuchaseAgreement{
+		Payload: &propertyProsApi.NotePurchaseAgreementRecord{
 			FirstName: "John",
 			LastName:  "smith",
 		},

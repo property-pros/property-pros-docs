@@ -7,12 +7,10 @@ import (
 	"html"
 	"html/template"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 
-	"github.com/SebastiaanKlippert/go-wkhtmltopdf"
 	wkhtml "github.com/SebastiaanKlippert/go-wkhtmltopdf"
 	interfaces "github.com/vireocloud/property-pros-docs/interfaces"
 	"go.etcd.io/etcd/pkg/fileutil"
@@ -27,7 +25,7 @@ type Pdf struct {
 
 func (p *Pdf) AddPage(reader io.Reader) error {
 
-	buffer, err := ioutil.ReadAll(reader)
+	buffer, err := io.ReadAll(reader)
 
 	if err != nil {
 		return err
@@ -45,7 +43,7 @@ func (p *Pdf) savePageToTempFile(content string) (*os.File, error) {
 	}
 	exPath := filepath.Dir(ex)
 
-	file, err := ioutil.TempFile(exPath, "notepurchaseagreement*.html")
+	file, err := os.CreateTemp(exPath, "notepurchaseagreement*.html")
 
 	if err != nil {
 		return file, err
@@ -151,15 +149,15 @@ func (p *Pdf) GetHtml() (string, error) {
 	inputFile := pdfMap.Pages[0].InputFile
 
 	if fileutil.Exist(inputFile) {
-		fileContent, err := ioutil.ReadFile(inputFile)
+		fileContent, err := os.ReadFile(inputFile)
 
 		return html.UnescapeString(string(fileContent)), err
 	}
 
-	return "", errors.New("Failed to read pdf content")
+	return "", errors.New("failed to read pdf content")
 }
 
-func NewPdf(pdfGenerator *wkhtmltopdf.PDFGenerator, template *HtmlTemplateBase) (*Pdf, error) {
+func NewPdf(pdfGenerator *wkhtml.PDFGenerator, template *HtmlTemplateBase) (*Pdf, error) {
 
 	pdfGenerator.PageSize.Set("letter")
 

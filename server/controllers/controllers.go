@@ -10,9 +10,9 @@ import (
 
 	"github.com/SebastiaanKlippert/go-wkhtmltopdf"
 	documents "github.com/vireocloud/property-pros-docs/documents"
-	propertyProsApi "github.com/vireocloud/property-pros-docs/generated/notepurchaseagreement"
 	notepurchaseagreement "github.com/vireocloud/property-pros-docs/notepurchaseagreement"
 	pagesContent "github.com/vireocloud/property-pros-docs/notepurchaseagreement/content"
+	propertyProsApi "github.com/vireocloud/property-pros-sdk/api/note_purchase_agreement/v1"
 )
 
 type NotePurchaseAgreementController struct {
@@ -67,14 +67,14 @@ func (c *NotePurchaseAgreementController) GetNotePurchaseAgreementDoc(ctx contex
 		return response, err
 	}
 
-	notePurchaseAgreementModel.FirstName = req.Payload.FirstName
-	notePurchaseAgreementModel.LastName = req.Payload.LastName
-	notePurchaseAgreementModel.DateOfBirth = req.Payload.DateOfBirth
-	notePurchaseAgreementModel.EmailAddress = req.Payload.EmailAddress
-	notePurchaseAgreementModel.FundsCommitted = req.Payload.FundsCommitted
-	notePurchaseAgreementModel.HomeAddress = req.Payload.HomeAddress
-	notePurchaseAgreementModel.PhoneNumber = req.Payload.PhoneNumber
-	notePurchaseAgreementModel.SocialSecurity = req.Payload.SocialSecurity
+	// notePurchaseAgreementModel.FirstName = req.Payload.FirstName
+	// notePurchaseAgreementModel.LastName = req.Payload.LastName
+	// notePurchaseAgreementModel.DateOfBirth = req.Payload.DateOfBirth
+	// notePurchaseAgreementModel.EmailAddress = req.Payload.EmailAddress
+	// notePurchaseAgreementModel.FundsCommitted = req.Payload.FundsCommitted
+	// notePurchaseAgreementModel.HomeAddress = req.Payload.HomeAddress
+	// notePurchaseAgreementModel.PhoneNumber = req.Payload.PhoneNumber
+	// notePurchaseAgreementModel.SocialSecurity = req.Payload.SocialSecurity
 
 	doc, err := notePurchaseAgreementModel.ToDoc().GetFileContent()
 

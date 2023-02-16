@@ -1,7 +1,0 @@
-FROM bufbuild/buf
-WORKDIR /app
-ADD . /app
-RUN apk add --update npm go && \
-    npm install
-
-CMD [ "/bin/sh", "-c", "/usr/local/bin/buf \"$@\"", "--"]

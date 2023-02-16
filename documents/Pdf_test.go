@@ -57,7 +57,7 @@ func TestGetFileContent(t *testing.T) {
 	fileContentReader, err := testPdf.GetFileContent()
 
 	if err != nil {
-		// t.Error(err)
+		t.Log(err)
 	}
 
 	pdfContentReader := fileContentReader.(*bytes.Reader)
