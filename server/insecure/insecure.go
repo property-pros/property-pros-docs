@@ -61,9 +61,14 @@ var (
 	Cert tls.Certificate
 	// CertPool contains the self signed certificate
 	CertPool *x509.CertPool
+
+	CertPem string
+	KeyPem string
 )
 
 func init() {
+	CertPem = certPEM
+	KeyPem = keyPEM
 	var err error
 	Cert, err = tls.X509KeyPair([]byte(certPEM), []byte(keyPEM))
 	if err != nil {

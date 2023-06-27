@@ -17,6 +17,7 @@ import (
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/grpclog"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -26,6 +27,7 @@ import (
 	controllers "github.com/vireocloud/property-pros-docs/server/controllers"
 	"github.com/vireocloud/property-pros-docs/server/third_party"
 	propertyProsApi "github.com/vireocloud/property-pros-sdk/api/note_purchase_agreement/v1"
+	statementApi "github.com/vireocloud/property-pros-sdk/api/statement/v1"
 )
 
 var (
@@ -133,11 +135,13 @@ func StartInsecureServer() {
 
 	propertyProsApi.RegisterNotePurchaseAgreementServiceServer(grpcServer, &controllers.NotePurchaseAgreementController{})
 
+	statementApi.RegisterStatementServiceServer(grpcServer, &controllers.StatementController{})
+
 	gwmux := runtime.NewServeMux()
 
 	ctx := context.Background()
-
-	dopts := []grpc.DialOption{grpc.WithInsecure()}
+// server not accessible from property-pros-service, but works with postman
+	dopts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 
 	host := "0.0.0.0"
 	port := "8020"
@@ -152,7 +156,7 @@ func StartInsecureServer() {
 	wg.Add(1)
 
 	go func() {
-		fmt.Println("Listening on 8020")
+		fmt.Println("Listening on 8020");
 		if err := http.ListenAndServe(serverUrl, grpcHandlerFunc(grpcServer, wrappedServer, gwmux, getOpenAPIHandler())); err != nil {
 			fmt.Println("Http listener failed: ", err)
 			wg.Done()
