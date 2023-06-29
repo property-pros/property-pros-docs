@@ -1,0 +1,34 @@
+<div>
+    <style>
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 10px;
+        }
+    </style>
+    <h1>Monthly Investor Statement</h1>
+    <p>Id: {{.Id}}</p>
+    <p>UserId: {{.UserId}}</p>
+    <p>EmailAddress: {{.EmailAddress}}</p>
+    <p>Password: {{.Password}}</p>
+    <p>StartPeriodDate: {{.StartPeriodDate}}</p>
+    <p>EndPeriodDate: {{.EndPeriodDate}}</p>
+    <table>
+        <tr>
+            <th>Current Value</th>
+            <th>Total ROI</th>
+            <th>Principle</th>
+        </tr>
+        <tr>
+            <td>{{.Balance}}</td>
+            <td>{{.TotalIncome}}</td>
+            <td>{{.Principle}}</td>
+        </tr>
+    </table>
+</div>

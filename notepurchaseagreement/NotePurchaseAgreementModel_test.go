@@ -109,7 +109,7 @@ func Setup() {
 
 	}
 
-	testTemplateBase, err := documents.NewHtmlTemplateBase("test", "", nil)
+	testTemplateBase, err := documents.NewHtmlTemplateBase("test", "<!doctype html><html><body>{{.Content}}</body></html><P style='page-break-before: always'>", nil)
 
 	if err != nil {
 		fmt.Printf("setup error: %v", err)

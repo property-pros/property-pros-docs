@@ -11,10 +11,9 @@ services:
       - .:/app
     ports:
       - 8020:8020
-    networks:
-      - back-tier
 volumes:
   go-modules:
-
 networks:
-  back-tier:
+  default:
+      name: back-tier
+      external: true
