@@ -12,3 +12,7 @@ watch:
 lint:
 	go vet ./...
 	go fmt ./...
+release: 
+	./cicd/release.sh
+create-container-repo:
+	gcloud artifacts repositories create pp --repository-format=docker --location=us-west1 --description="Docker repository for Property Pros"

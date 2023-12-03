@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"flag"
 	"fmt"
 	"io/fs"
@@ -17,12 +16,12 @@ import (
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/grpclog"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/improbable-eng/grpc-web/go/grpcweb"
-	"github.com/vireocloud/property-pros-docs/server/gateway"
 
 	controllers "github.com/vireocloud/property-pros-docs/server/controllers"
 	"github.com/vireocloud/property-pros-docs/server/third_party"
@@ -42,59 +41,17 @@ func main() {
 	grpclog.SetLoggerV2(log)
 
 	if *enableTls {
-		port := "9090"
+		// port := "9090"
+		//TODO: get a key file
+		creds, err := credentials.NewServerTLSFromFile("/etc/ssl/cert.pem", "")
 
-		if *enableTls {
-			port = "10000"
+		if err!= nil {
+			grpclog.Fatalln(err)
 		}
 
-		addr := fmt.Sprintf(":%v", port)
-
-		grpcServer := grpc.NewServer()
-
-		propertyProsApi.RegisterNotePurchaseAgreementServiceServer(grpcServer, &controllers.NotePurchaseAgreementController{})
-
-		wrappedServer := grpcweb.WrapServer(grpcServer)
-
-		handler := func(resp http.ResponseWriter, req *http.Request) {
-			wrappedServer.ServeHTTP(resp, req)
-		}
-
-		httpServer := http.Server{
-			Addr:    addr,
-			Handler: http.HandlerFunc(handler),
-		}
-
-		b, err := json.MarshalIndent(grpcweb.ListGRPCResources(grpcServer), "", "  ")
-		if err == nil {
-			grpclog.Infof("Available Grpc Commands: %v", string(b))
-		}
-
-		if *enableTls {
-			go func() {
-				grpclog.Info("Serving gRPC on https://", addr)
-				if err := httpServer.ListenAndServeTLS("insecure/cert", "insecure/key"); err != nil {
-					grpclog.Fatalf("failed starting http2 server: %v", err)
-				}
-			}()
-
-			err = gateway.Run("dns:///"+addr, enableTls)
-
-			log.Fatalln(err)
-		} else {
-			go func() {
-				grpclog.Info("Serving gRPC on http://", addr)
-				if err := httpServer.ListenAndServe(); err != nil {
-					grpclog.Fatalf("failed starting http server: %v", err)
-				}
-			}()
-
-			err = gateway.Run("dns:///"+addr, enableTls)
-
-			log.Fatalln(err)
-		}
+		StartServer(creds)
 	} else {
-		StartInsecureServer()
+		StartServer(insecure.NewCredentials())
 	}
 }
 
@@ -126,7 +83,7 @@ func grpcHandlerFunc(grpcServer *grpc.Server, grpcWebServer *grpcweb.WrappedGrpc
 	}), &http2.Server{})
 }
 
-func StartInsecureServer() {
+func StartServer(transportCredentials credentials.TransportCredentials) {
 	wg := sync.WaitGroup{}
 
 	grpcServer := grpc.NewServer()
@@ -141,7 +98,7 @@ func StartInsecureServer() {
 
 	ctx := context.Background()
 // server not accessible from property-pros-service, but works with postman
-	dopts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
+	dopts := []grpc.DialOption{grpc.WithTransportCredentials(transportCredentials)}
 
 	host := "0.0.0.0"
 	port := "8020"
