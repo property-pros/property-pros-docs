@@ -1,0 +1,27 @@
+FROM golang:1.19.8
+
+RUN apt-get dist-upgrade -y && apt-get update && apt-get install -y ca-certificates git-core ssh
+
+RUN go install github.com/cespare/reflex@latest
+RUN wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.bullseye_amd64.deb && \
+    apt update && \
+    apt install -y ./wkhtmltox_0.12.6.1-2.bullseye_amd64.deb
+
+ADD ./cicd/id_rsa_shared /root/.ssh/id_rsa
+ADD ./cicd/id_rsa_shared.pub /root/.ssh/id_rsa.pub
+RUN chmod 700 /root/.ssh/id_rsa
+RUN echo "Host github.com\n\tStrictHostKeyChecking no\n" >> /root/.ssh/config
+RUN git config --global url.ssh://git@github.com/vireocloud.insteadOf https://github.com/vireocloud
+
+COPY . /app
+WORKDIR /app
+RUN go clean -modcache && \
+    export GONOSUMDB="github.com/vireocloud" && \
+    go get github.com/vireocloud/property-pros-sdk
+RUN go mod tidy 
+RUN go mod download && \
+    go build -o property-pros-service
+
+EXPOSE 8020
+
+ENTRYPOINT [ "./property-pros-service"]

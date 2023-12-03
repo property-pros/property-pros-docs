@@ -13,7 +13,3 @@ services:
       - 8020:8020
 volumes:
   go-modules:
-networks:
-  default:
-      name: back-tier
-      external: true
