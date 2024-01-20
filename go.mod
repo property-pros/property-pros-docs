@@ -6,7 +6,7 @@ require (
 	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.7.2
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.15.0
 	github.com/improbable-eng/grpc-web v0.15.0
-	github.com/vireocloud/property-pros-sdk v0.0.31
+	github.com/vireocloud/property-pros-sdk v0.0.35
 	go.etcd.io/etcd v0.0.0-20191023171146-3cf2f69b5738
 	golang.org/x/net v0.3.0
 	google.golang.org/grpc v1.51.0
@@ -36,6 +36,6 @@ require (
 	nhooyr.io/websocket v1.8.6 // indirect
 )
 
-replace github.com/omeid/uconfig => github.com/vireocloud/uconfig v0.4.0
+replace github.com/omeid/uconfig => github.com/omeid/uconfig v0.4.0
 
 // replace github.com/vireocloud/property-pros-sdk => ../property-pros-sdk

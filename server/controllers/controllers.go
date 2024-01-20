@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 
 	"io/fs"
@@ -32,7 +33,7 @@ func (c *StatementController) GetStatementDoc(ctx context.Context, req *statemen
 	if err != nil {
 		return
 	}
-	
+
 	pdfGenerator, err := CreatePDFGenerator()
 
 	if err != nil {
@@ -77,7 +78,7 @@ func (c *StatementController) GetStatementDoc(ctx context.Context, req *statemen
 	buffer.ReadFrom(doc)
 
 	statementModel.ToDoc().SaveDocumentToFile("./statementtest.pdf")
-	
+
 	response = &statement.GetStatementDocResponse{
 		Document: buffer.Bytes(),
 	}
@@ -90,14 +91,14 @@ func FillStatementModel(model *statements.Statement, data *statement.GetStatemen
 
 	model.Balance = payload.GetBalance()
 	model.EmailAddress = payload.GetEmailAddress()
-	model.EndPeriodDate	= payload.GetEndPeriodDate()
+	model.EndPeriodDate = payload.GetEndPeriodDate()
 	model.Id = payload.GetId()
 	model.Password = payload.GetPassword()
 	model.Principle = payload.GetPrinciple()
 	model.StartPeriodDate = payload.GetStartPeriodDate()
 	model.UserId = payload.GetUserId()
 	model.TotalIncome = payload.GetTotalIncome()
-	
+
 	return model
 }
 
@@ -105,7 +106,7 @@ type NotePurchaseAgreementController struct {
 	propertyProsApi.UnimplementedNotePurchaseAgreementServiceServer
 }
 
-func (c *NotePurchaseAgreementController) GetNotePurchaseAgreementDoc(ctx context.Context, req *propertyProsApi.GetNotePurchaseAgreementDocRequest) (*propertyProsApi.GetNotePurchaseAgreementDocResponse, error) {
+func (c *NotePurchaseAgreementController) GetNotePurchaseAgreementDoc(req *propertyProsApi.GetNotePurchaseAgreementDocRequest, stream propertyProsApi.NotePurchaseAgreementService_GetNotePurchaseAgreementDocServer) error {
 	response := &propertyProsApi.GetNotePurchaseAgreementDocResponse{}
 
 	fsys := fs.FS(notePurchaseAgreementPagesContent.Content)
@@ -113,37 +114,37 @@ func (c *NotePurchaseAgreementController) GetNotePurchaseAgreementDoc(ctx contex
 	pages, err := ReadPagesJson(fsys)
 
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	pdfGenerator, err := CreatePDFGenerator()
 
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	pageContainerTemplate, err := fs.ReadFile(fsys, "contentTemplate.html")
 
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	pageContainerTemplateManager, err := documents.NewHtmlTemplateBase("pagecontainer", string(pageContainerTemplate), nil)
 
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	pdf, err := documents.NewPdf(pdfGenerator, pageContainerTemplateManager)
 
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	notePurchaseAgreementModel, err := notepurchaseagreement.NewNotePurchaseAgreement(pages, pdf)
 
 	if err != nil {
-		return response, err
+		return err
 	}
 
 	log.Println("GetNotePurchaseAgreementDoc: ", req.String())
@@ -154,7 +155,7 @@ func (c *NotePurchaseAgreementController) GetNotePurchaseAgreementDoc(ctx contex
 
 	if err != nil {
 		log.Println("failed to get file content: ", err)
-		return response, err
+		return err
 	}
 
 	buffer := &bytes.Buffer{}
@@ -164,7 +165,26 @@ func (c *NotePurchaseAgreementController) GetNotePurchaseAgreementDoc(ctx contex
 
 	notePurchaseAgreementModel.ToDoc().SaveDocumentToFile("./test.pdf")
 
-	return response, nil
+	fileContent := response.FileContent
+
+	fmt.Println("chunking file content")
+	chunkSize := 1024 * 1024 // 1MB chunks
+	for i := 0; i < len(fileContent); i += chunkSize {
+		end := i + chunkSize
+		if end > len(fileContent) {
+			end = len(fileContent)
+		}
+		chunk := fileContent[i:end]
+		fmt.Println("sending chunk")
+		if err := stream.Send(&propertyProsApi.GetNotePurchaseAgreementDocResponse{
+			FileContent: chunk,
+		}); err != nil {
+			return err
+		}
+	}
+	
+	fmt.Println("done chunking")
+	return nil
 }
 
 // ReadPagesJson reads the pages file from the file system and returns a slice of strings

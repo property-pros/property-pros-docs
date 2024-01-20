@@ -41,16 +41,18 @@ func main() {
 	grpclog.SetLoggerV2(log)
 
 	if *enableTls {
+		fmt.Println("TLS enabled")
 		// port := "9090"
 		//TODO: get a key file
 		creds, err := credentials.NewServerTLSFromFile("/etc/ssl/cert.pem", "")
 
-		if err!= nil {
+		if err != nil {
 			grpclog.Fatalln(err)
 		}
 
 		StartServer(creds)
 	} else {
+		fmt.Println("TLS disabled")
 		StartServer(insecure.NewCredentials())
 	}
 }
@@ -86,26 +88,31 @@ func grpcHandlerFunc(grpcServer *grpc.Server, grpcWebServer *grpcweb.WrappedGrpc
 func StartServer(transportCredentials credentials.TransportCredentials) {
 	wg := sync.WaitGroup{}
 
-	grpcServer := grpc.NewServer()
+	grpcServer := grpc.NewServer(
+		grpc.MaxRecvMsgSize(1024*1024*1024),
+		grpc.MaxSendMsgSize(1024*1024*1024),
+	)
 
 	wrappedServer := grpcweb.WrapServer(grpcServer)
 
 	propertyProsApi.RegisterNotePurchaseAgreementServiceServer(grpcServer, &controllers.NotePurchaseAgreementController{})
-
 	statementApi.RegisterStatementServiceServer(grpcServer, &controllers.StatementController{})
 
 	gwmux := runtime.NewServeMux()
 
 	ctx := context.Background()
-// server not accessible from property-pros-service, but works with postman
-	dopts := []grpc.DialOption{grpc.WithTransportCredentials(transportCredentials)}
+	// server not accessible from property-pros-service, but works with postman
+	dopts := []grpc.DialOption{
+		grpc.WithTransportCredentials(transportCredentials),
+	}
 
 	host := "0.0.0.0"
-	port := "8020"
+	serverPort := "8020"
+	gatewayPort := "8023"
 	scheme := "dns:///"
 
-	serverUrl := fmt.Sprintf("%v:%v", host, port)
-	dialUrl := fmt.Sprintf("%vlocalhost:%v", scheme, port)
+	serverUrl := fmt.Sprintf("%v:%v", host, serverPort)
+	dialUrl := fmt.Sprintf("%vlocalhost:%v", scheme, gatewayPort)
 
 	fmt.Println("server url: ", serverUrl)
 	fmt.Println("dial url: ", dialUrl)
@@ -113,8 +120,20 @@ func StartServer(transportCredentials credentials.TransportCredentials) {
 	wg.Add(1)
 
 	go func() {
-		fmt.Println("Listening on 8020");
-		if err := http.ListenAndServe(serverUrl, grpcHandlerFunc(grpcServer, wrappedServer, gwmux, getOpenAPIHandler())); err != nil {
+		// Create a server
+		srv := &http.Server{
+			Addr:    serverUrl,
+			Handler: grpcHandlerFunc(grpcServer, wrappedServer, gwmux, getOpenAPIHandler()),
+		}
+
+		// Configure the server with the http2 options
+		http2Server := http2.Server{
+			MaxReadFrameSize: 1024 * 1024 * 10, // maximum allowed frame size
+		}
+
+		_ = http2.ConfigureServer(srv, &http2Server)
+		fmt.Printf("Listening on 8020 with framesize %v \n", http2Server.MaxReadFrameSize)
+		if err := srv.ListenAndServe(); err != nil {
 			fmt.Println("Http listener failed: ", err)
 			wg.Done()
 		}
@@ -123,9 +142,12 @@ func StartServer(transportCredentials credentials.TransportCredentials) {
 	err := propertyProsApi.RegisterNotePurchaseAgreementServiceHandlerFromEndpoint(ctx, gwmux, dialUrl, dopts)
 
 	if err != nil {
-		grpclog.Fatalf("failed starting http server: %v", err)
+		grpclog.Errorf("failed starting http server: %v", err)
 	}
 
+	os.Unsetenv("HTTP_PROXY")
+	os.Unsetenv("HTTPS_PROXY")
+	os.Unsetenv("NO_PROXY")
 	wg.Wait()
 }
 
